@@ -20,7 +20,7 @@ function LoginPage() {
   
           <button className='text-white bg-green-700 h-12 w-[100%] rounded-xl mb-[30px]'>Sign-In</button>
           
-          <p className='text-white text-center mb-3'>New here? Register</p>
+          <p className='text-white text-center mb-3'>New here? <Link className='text-blue-400' to='/signup'>Register</Link></p>
         </div>
       </div>
         
