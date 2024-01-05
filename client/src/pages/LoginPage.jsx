@@ -8,15 +8,15 @@ function LoginPage() {
     const [ response, setResponse] = useState()
 
     const loginEndpoint = ''
-    const passwordRegex = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$"/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/;
 
     async function handleLogin(e) {
         e.preventDefault()
         setError(null)
+        console.log(error)
 
         if (passwordRegex.test(password) == false) {
             setError({msg: 'Password must be between 8-16 characters \n must contain atleast, one letter, one number, one uppercase'})
-            console.log(error)
             return
         }
         /*
@@ -47,6 +47,7 @@ function LoginPage() {
         */
     }
 
+    console.log(error)
     
     return (
       <>

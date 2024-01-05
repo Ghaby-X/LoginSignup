@@ -6,7 +6,7 @@ function SignupPage() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState()
 
-    const passwordRegex = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$"/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/;
 
 
     async function handleRegister(e) {
