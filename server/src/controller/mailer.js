@@ -42,7 +42,7 @@ const sendVerificationEmail = ({_id, email}, res) => {
     let obj = {
         toEmail: email,
         subject: 'OTP-emailVerification',
-        html: `<p>Verify your email address to complete the signup and login into your account</p><p>This link <b>expires in 6 hours</b></p><p>Press <a href=${process.env.SERVER_URL + '/user/verify/' + _id + '/' + uniqueString}>here</a> to proceed</p>`
+        html: `<p>Verify your email address to complete the signup and login into your account</p><p>This link <b>expires in 6 hours</b></p><p>Press <a href=${process.env.FRONTEND_URL + '/mailverification/' + _id + '/' + uniqueString}>here</a> to proceed</p>`
     }
 
     //hash uniqueString
