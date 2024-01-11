@@ -15,7 +15,6 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/
 //verification endpoint
 router.get('/verify/:userId/:uniqueString', async (req, res) =>{
     let {userId, uniqueString} = req.params;
-
     try {
         let userFound = await UserVerification.find({userId:userId})
         if (userFound.length > 0){
@@ -39,14 +38,24 @@ router.get('/verify/:userId/:uniqueString', async (req, res) =>{
                     return res.status(400).json({msg: 'BAD LINK'})
                 }
             }
+        }else{
+            //check whether the user is already verified
+            let user = await User.findOne({_id: userId})
+            if(user.isVerified){
+                return res.status(200).json({msg: 'User Already Verified'})
+
+            }
+            // Link is bad or not from use
+            return res.status(400).json({msg: 'User not Found'})
         }
     }
     catch(e){
+        console.log('server error')
         return res.status(500).json({msg: '500: INTERNAL SERVER ERROR'})
     }
 })
 
-
+//signup endoint
 router.post('/signup', async (req, res) => {
     let { email, password} = req.body;
     email = email.trim()
@@ -82,49 +91,7 @@ router.post('/signup', async (req, res) => {
     catch(e){
         return res.status(500).json({msg: '500: INTERNAL SERVER ERROR'})
     }
-    /*
-    
-    User.find({email}) 
-    .then(async result => {
-        console.log(result)
-        if(result.length > 0) {
-            console.log('email already registered')
-            return res.status(400).json({msg: 'email already registered'})
-        }
-
-        //email verification
-        try {
-            let hashedPassword = await bcrypt.hash(password, 10)
-            let newUser = new User({
-                email,
-                password: hashedPassword,
-                isVerified: false
-            })
-
-            newUser.save()
-            .then(result => {
-                sendVerificationEmail(result, res)
-                console.log('User saved successfully')
-            })
-            .catch(e=> {
-                console.log(e)
-                return res.status(500).json({msg: "500: could not save user model"})
-            })
-
-            return res.status(201).json({msg: 'email sent successfully'})
-        }
-        catch(e) {
-            console.log('Error sending email')
-            console.log(e)
-            return res.status(500).json({msg: 'couldnt send otp'})
-        }
-
-    })
-    .catch(err => {
-        return res.status(500).json({msg: 'server error'})
-    })
-    */
-
+   
 })
 
 module.exports = router
