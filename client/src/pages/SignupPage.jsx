@@ -19,14 +19,12 @@ function SignupPage() {
     
     async function handleRegister(e) {
       e.preventDefault()
-      setError()
-    
+
       if (passwordRegex.test(password) == false) {
           setError({msg: 'Password must be between 8-16 characters \n must contain atleast, one letter, one number, one uppercase'})
           return
       }
 
-      
       try {
         setLoading(true)
         //sending a post request with email and password
@@ -48,7 +46,6 @@ function SignupPage() {
           if (res.status >= 500) {
             throw new Error ('500: Internal server error')
           }
-
           //if error is from client, set customized error
           setError(value)
           console.log(value)
