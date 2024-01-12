@@ -16,20 +16,23 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/
 router.get('/verify/:userId/:uniqueString', async (req, res) =>{
     let {userId, uniqueString} = req.params;
     try {
-        let userFound = await UserVerification.find({userId:userId})
-        if (userFound.length > 0){
-            //user verification record exist so
-            const {expiredAt} = userFound[0]
-            const hashedUniqueString = userFound[0].uniqueString
+        let userFound = await UserVerification.findOne({userId:userId})
+        if (!userFound){
+            //check whether the user is already verified
+            let user = await User.findOne({_id: userId})
+            if(user.isVerified) return res.status(200).json({msg: 'User Already Verified'})
+            return res.status(400).json({msg: 'User not Found'})
+        }
 
-            //checking if record is not expired
-            if(expiredAt < Date.now()) {
+        if (userFound){
+            
+            if(userFound?.expiredAt < Date.now()) {
                 await UserVerification.deleteOne({userId})
                 await User.deleteOne({_id: userId})
                 return res.status(400).json({msg: 'LINK EXPIRED'})
             }else {
                 //link is not expired, checking if it is valid
-                const isMatch = await bcrypt.compare(uniqueString, hashedUniqueString)
+                const isMatch = bcrypt.compare(uniqueString, userFound.uniqueString)
                 if (isMatch) {
                     await User.updateOne({_id: userId}, {isVerified: true})
                     await UserVerification.deleteOne({userId})
@@ -38,15 +41,6 @@ router.get('/verify/:userId/:uniqueString', async (req, res) =>{
                     return res.status(400).json({msg: 'BAD LINK'})
                 }
             }
-        }else{
-            //check whether the user is already verified
-            let user = await User.findOne({_id: userId})
-            if(user.isVerified){
-                return res.status(200).json({msg: 'User Already Verified'})
-
-            }
-            // Link is bad or not from use
-            return res.status(400).json({msg: 'User not Found'})
         }
     }
     catch(e){
