@@ -88,3 +88,20 @@ exports.verifyEmail = asyncHandler(async (req, res, next) => {
         return res.status(500).json({msg: '500: INTERNAL SERVER ERROR'})
     }
 })
+
+exports.login = asyncHandler(async (req, res) => {
+    try{
+        return res.json({msg: 'successfully signed in'})
+    }
+    catch(e) {
+        return res.json({msg: 'not logged in'})
+    }
+    
+})
+
+exports.logout = asyncHandler(async (req, res) => {
+    req.logout(function(err) {
+        if(err) {return next(err)}
+        return res.status(200).json({msg: 'Logged Out successfully'})
+    })
+})

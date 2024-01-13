@@ -1,17 +1,25 @@
 require('dotenv').config();
 const express = require('express')
 const cors = require('cors')
+const session = require('express-session')
+const passport = require('./config/passport')
 const bodyParser = require('body-parser')
-
 const userRoutes = require('./routes/route')
 
 const PORT = process.env.PORT || 4000
-
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
+
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/user', userRoutes)
 
