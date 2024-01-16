@@ -4,6 +4,7 @@ const {v4: uuidv4} = require('uuid');
 const authService = require('../services/authServices')
 const User = require('../models/User');
 const UserVerification = require('../models/UserVerification')
+const passport = require('../config/passport')
 
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/;
@@ -89,14 +90,38 @@ exports.verifyEmail = asyncHandler(async (req, res, next) => {
     }
 })
 
-exports.login = asyncHandler(async (req, res) => {
-    try{
-        return res.json({msg: 'successfully signed in'})
-    }
-    catch(e) {
-        return res.json({msg: 'not logged in'})
-    }
+/*
+This endpoint calls the authenticateLocal service from authService which takes in a callback parameter and a params parameter. 
+It returns customized messages depending on the status of the users req parameters
+*/
+exports.login = asyncHandler(async (req, res, next) => {
+    authService.authenticateLocal((err, user, info) => {
+        try {
+        console.log(req.body)
+        console.log(info)
+        if (err) {
+            throw new Error('authentication Error')
+        }
+        if (!user) {
+            console.log('invalid credentials')
+            return res.status(400).json({ msg: info?.message });
+        }
+        if(!user.isVerified) {
+            console.log('not verified')
+            return res.status(401).json({ msg: info?.message })
+        }
     
+        req.login(user, (err) => {
+            if(err) { throw new Error('Login Error') }
+            console.log('logged in successfully')
+            res.json({msg: 'logged in successfully'})
+        })
+        }
+        catch(e){
+            console.log(e)
+            return res.status(500)
+        }
+    }, [req, res, next])
 })
 
 exports.logout = asyncHandler(async (req, res) => {

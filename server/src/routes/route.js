@@ -12,7 +12,8 @@ router.get('/verify/:userId/:uniqueString', authController.verifyEmail)
 router.post('/signup', authController.signup)
 
 //login endpoint
-router.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }), authMiddleware.isVerified, authController.login)
+router.post('/login', authController.login)
+
 
 router.post('/logout', authController.logout)
 module.exports = router

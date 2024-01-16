@@ -10,15 +10,15 @@ passport.use(new LocalStrategy({
 }, async function verify(email, password, cb) {
     try{
         let user = await User.findOne({email: email})
-        if (!user) {throw new Error('Email not registered')}
-        if (!user?.isVerified) {return cb(null, false, {msg: 'User not verified'})}
+        if (!user) {return cb(null, false, {message: 'User not registerd'})}
+        if (!user?.isVerified) {return cb(null, false, {message: 'User not verified'})}
 
-        const isMatch = bcrypt.compare(password, user?.password)
-        if(!isMatch) {return cb(null, false, {msg: 'Incorrect password'})}
+        const isMatch = await bcrypt.compare(password, user?.password)
+        if(!isMatch) {return cb(null, false, {message: 'Incorrect password'})}
 
         return cb(null, user)
     }  
-    catch(e) {
+    catch(err) {
         return cb(err);
     } 
 }))
