@@ -6,8 +6,6 @@ import toast, { Toaster } from 'react-hot-toast'
 function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [status, setStatus] = useState()
-    const [msg, setMsg] = useState()
     const [loading, setLoading] = useState()
 
     const loginEndpoint = import.meta.env.VITE_APP_BACKEND_URL + '/user/login'
@@ -32,14 +30,17 @@ function LoginPage() {
         console.log(result)
 
         let value = await result.json()
-        console.log(value)
         
         if (result.ok){
           console.log('Login successful: ' + value.msg)
-          setStatus(1)
+          toast.success(value.msg, {id: 'clipboard'})
+          setTimeout(() => {
+            navigate('/dashboard')
+          }, 1000)
+          
         } else {
           console.log('Login failed: ', value.msg)
-          setStatus(0)
+          toast.error(value.msg, {id: 'clipboard'})
         }
       }
       catch(err) {
@@ -48,21 +49,13 @@ function LoginPage() {
       }
       finally{
         setLoading(false)
-        if (status == 1){ toast.success(msg) }
-        if (status == 0){ toast.error(msg) }
-        setTimeout(() => {
-          setStatus()
-          setMsg()
-        }, 4000)
       }
   }
  
 
   if(loading){
-    toast('loading...')
+    toast('loading...', {id: 'clipboard'})
   }
-  console.log('status: ', status)
-  console.log('msg ', msg)
 
 
   return (
