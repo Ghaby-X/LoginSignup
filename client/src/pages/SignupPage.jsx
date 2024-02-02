@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
 
+import axios from '../config/axiosConfig'
+
 
 
 function SignupPage() {
@@ -14,7 +16,7 @@ function SignupPage() {
     const navigate = useNavigate();
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/;
-    const postURL = import.meta.env.VITE_APP_BACKEND_URL + '/user/signup'
+    const signUpEndpoint = import.meta.env.VITE_APP_BACKEND_URL + '/user/signup'
     
     async function handleRegister(e) {
       e.preventDefault()
@@ -23,47 +25,26 @@ function SignupPage() {
           setError({msg: 'Password must be between 8-16 characters \n must contain atleast, one letter, one number, one uppercase'})
           return
       }
-
+      let data = {
+        email: email,
+        password: password
+      }
       try {
         setLoading(true)
-        //sending a post request with email and password
-        let res = await fetch(postURL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-          body: new URLSearchParams(
-            {
-              email: email,
-              password: password
-            }
-          )
-        })
-        let value = await res.json()
-        //checking if error is from server or client
-        if(!res.ok){
-          if (res.status >= 500) {
-            throw new Error ('500: Internal server error')
-          }
-          //if error is from client, set customized error
-          setError(value)
-          console.log(value)
-        }else {
-          navigate('/mailsent')
-        }
+        let response = await axios.post(signUpEndpoint, data)
+        navigate('/mailsent')
       }
-      catch (e) {
-        console.log(e)
-        return <><p>500: internal server error</p></>
-      }finally {
+      catch(error) {
+        console.log('Error logging in')
+        error.response.data ? toast.error(error.response.data.msg, { id: 'clipboard' }) : console.log(error)
+      }
+      finally {
         setLoading(false)
       }
     }
 
     if(loading){
-      toast('loading...')
-    }else{
-      toast.dismiss()
+      toast('loading...', { id: 'clipboard' })
     }
 
     return (
@@ -83,7 +64,7 @@ function SignupPage() {
   
           <button type='submit' className='text-white bg-green-700 h-12 w-[100%] rounded-xl mb-[30px] hover:bg-green-600'>Register</button>
           
-          <p className='text-white text-center text-sm mb-3'>Already a user? <Link className='text-blue-400' to='/'>Login</Link></p>
+          <p className='text-white text-center text-sm mb-3'>Already a user? <Link className='text-blue-400' to='/login'>Login</Link></p>
         </div>
       </form>
         

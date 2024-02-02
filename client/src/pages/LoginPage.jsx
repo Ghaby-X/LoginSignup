@@ -1,62 +1,47 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
+import axios from '../config/axiosConfig'
 
 function LoginPage() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState()
+  const navigate = useNavigate()
 
-    const loginEndpoint = import.meta.env.VITE_APP_BACKEND_URL + '/user/login'
-    const navigate = useNavigate()
+  const loginEndpoint = import.meta.env.VITE_APP_BACKEND_URL + '/user/login'
+  
+  async function handleLogin(e) {
+    e.preventDefault()
+    setLoading(true)
+    //logging user in
+    let data = {
+      email: email,
+      password: password
+    }
     
-    async function handleLogin(e) {
-      e.preventDefault()
-      try{
-        setLoading(true)
-        let result = await fetch(loginEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-          body: new URLSearchParams(
-            {
-              email: email,
-              password: password
-            }
-        )
-        })
-        console.log(result)
-
-        let value = await result.json()
-        
-        if (result.ok){
-          console.log('Login successful: ' + value.msg)
-          toast.success(value.msg, {id: 'clipboard'})
-          setTimeout(() => {
-            navigate('/dashboard')
-          }, 1000)
-          
-        } else {
-          console.log('Login failed: ', value.msg)
-          toast.error(value.msg, {id: 'clipboard'})
-        }
-      }
-      catch(err) {
-        console.log(err)
-        return <><p>500: internal server error</p></>
-      }
-      finally{
-        setLoading(false)
-      }
-  }
+    try {
+      let response = await axios.post(loginEndpoint, data)
+      toast.success(response.data.msg, { id: 'clipboard' })
+      console.log('logged in successfully')
+      setTimeout(() => {
+        navigate('/dashboard')
+      }, 500)
+    }
+    catch(error) {
+      console.log('Error logging in')
+      error.response.data ? toast.error(error.response.data.msg, { id: 'clipboard' }) : console.log(error)
+    }
+    finally {
+      setLoading(false)
+    }
+ 
+}
  
 
   if(loading){
     toast('loading...', {id: 'clipboard'})
   }
-
 
   return (
   <>
