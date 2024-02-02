@@ -4,7 +4,9 @@ const {v4: uuidv4} = require('uuid');
 const authService = require('../services/authServices')
 const User = require('../models/User');
 const UserVerification = require('../models/UserVerification')
-const passport = require('../config/passport')
+const passport = require('../config/passport');
+const { request } = require("express");
+const jwt = require('jsonwebtoken')
 
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$/;
@@ -97,8 +99,6 @@ It returns customized messages depending on the status of the users req paramete
 exports.login = asyncHandler(async (req, res, next) => {
     authService.authenticateLocal((err, user, info) => {
         try {
-        console.log(req.body)
-        console.log(info)
         if (err) {
             throw new Error('authentication Error')
         }
@@ -110,15 +110,15 @@ exports.login = asyncHandler(async (req, res, next) => {
             console.log('not verified')
             return res.status(401).json({ msg: info?.message })
         }
-    
+        
         req.login(user, (err) => {
             if(err) { throw new Error('Login Error') }
             console.log('logged in successfully')
             res.json({msg: 'logged in successfully'})
         })
         }
-        catch(e){
-            console.log(e)
+        catch(error){
+            console.log(error)
             return res.status(500)
         }
     }, [req, res, next])
@@ -126,7 +126,14 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 exports.logout = asyncHandler(async (req, res) => {
     req.logout(function(err) {
-        if(err) {return next(err)}
+        if(err) {return res.status(500)}
+        console.log('logged out succesfully')
         return res.status(200).json({msg: 'Logged Out successfully'})
     })
 })
+
+//controller to verify if user is authenticated
+exports.isauth = asyncHandler(async(req, res) => {
+    let authStatus = req.isAuthenticated()
+    return res.status(200).send(authStatus)
+});

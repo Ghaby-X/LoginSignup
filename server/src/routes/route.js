@@ -14,6 +14,10 @@ router.post('/signup', authController.signup)
 //login endpoint
 router.post('/login', authController.login)
 
-
+//logout route
 router.post('/logout', authController.logout)
+
+router.post('/isauth', authController.isauth)
+
+
 module.exports = router
