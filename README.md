@@ -13,12 +13,15 @@ React Frontend: User-friendly UI built with React for the frontend.
 <h1>WorkFlow</h1>
 In this particular project, session data is stored in server memory for development purposes
 
+
 ![image](https://github.com/Ghaby-X/LoginSignup/assets/105595126/0c3917aa-06f8-475c-b5f5-15995a863f3a)
 
 
 <h1>Pre Requisites</h1>
 1. Nodejs and npm
+
 2. Mongodb
+
 3. React
 
 <h1>Getting Started</h1>
@@ -28,10 +31,12 @@ git clone https://github.com/Ghaby-X/LoginSignup.git
 cd LoginSignup
 ```
 
+
 2. create an env in both client and server directory. format is shown in a sample.env file
 
 3. Install dependencies in both directory
-   for client;
+
+for client;
 ```
 cd client
 npm install
@@ -43,6 +48,7 @@ npm install
 ```
 
 4. Run both server and client
+
 for client (while in the client directory);
 ```
 npm run dev
@@ -51,5 +57,6 @@ for server(while in the server directory);
 ```
 npm run dev
 ```
+
 
 <h1> Video of working app</h1>
