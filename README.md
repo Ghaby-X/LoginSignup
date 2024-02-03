@@ -12,13 +12,14 @@ React Frontend: User-friendly UI built with React for the frontend.
 
 <h1>WorkFlow</h1>
 In this particular project, session data is stored in server memory for development purposes
+
 ![image](https://github.com/Ghaby-X/LoginSignup/assets/105595126/0c3917aa-06f8-475c-b5f5-15995a863f3a)
 
 
 <h1>Pre Requisites</h1>
-Nodejs and npm
-Mongodb
-React
+1. Nodejs and npm
+2. Mongodb
+3. React
 
 <h1>Getting Started</h1>
 1. Clone the repository
