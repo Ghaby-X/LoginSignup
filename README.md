@@ -66,3 +66,18 @@ npm run dev
 
 
 ## Video of working app
+
+Signing up
+
+
+
+https://github.com/Ghaby-X/LoginSignup/assets/105595126/e64d8e47-21a5-4852-8be1-8ecb70c60e1f
+
+
+Logging in
+
+
+https://github.com/Ghaby-X/LoginSignup/assets/105595126/fa352e61-cdd3-4d1f-9e33-e49cfe167329
+
+
+
