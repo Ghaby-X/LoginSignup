@@ -26,11 +26,11 @@ In this particular project, session data is stored in server memory for developm
 
 <h1>Getting Started</h1>
 1. Clone the repository
+
 ```
 git clone https://github.com/Ghaby-X/LoginSignup.git
 cd LoginSignup
 ```
-
 
 2. create an env in both client and server directory. format is shown in a sample.env file
 
